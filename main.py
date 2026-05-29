@@ -5,16 +5,19 @@ import asyncio
 import json
 import logging
 import random
+import os
+import dotenv
 from pathlib import Path
 
 import discord
 from discord import app_commands
 from discord.ext import commands
+from dotenv import load_dotenv
 
 logging.basicConfig(level=logging.INFO)
+load_dotenv()
 
 # ---------------- CONFIG (fill these) ----------------
-TOKEN = "MTUwOTc3MDEwMDcxNzM5MTk2Mg.GncJ3O.EVjX6hZW1UsH0t1BBo5eedS057AbmDk3DF4ZVc"
 GUILD_ID = 1505685866272526416  # your guild/server ID
 
 # channels
@@ -44,11 +47,12 @@ EVENT_PING_ROLE_ID = 1509772257508200458    # 🎉 Event Ping
 # ----------------------------------------------------
 
 # ---------------- FILES ----------------
-TEAMS_FILE = Path("teams.json")
-PLAYER_HISTORY_FILE = Path("player_history.json")
-INVITES_FILE = Path("invites.json")
-ROSTER_LOCK_FILE = Path("roster_lock.json")
-
+data_file = os.getenv("data_file", "/data")
+os.makedirs(data_file, exist_ok=True)
+TEAMS_FILE = os.path.join(data_file, "teams.json")
+PLAYER_HISTORY_FILE = os.path.join(data_file, "player_history.json")
+INVITES_FILE = os.path.join(data_file, "invites.json")
+ROSTER_LOCK_FILE = os.path.join(data_file, "roster_lock.json")
 
 # ---------------- HELPERS ----------------
 def is_staff(user: discord.Member) -> bool:
@@ -2283,7 +2287,7 @@ async def on_ready():
 
 
 async def main():
-    await bot.start(TOKEN)
+    await bot.start(os.getenv("TOKEN"))
 
 
 if __name__ == "__main__":
